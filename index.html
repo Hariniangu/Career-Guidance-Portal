@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Guidance App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login/Signup View -->
+        <div id="auth-view" class="view active">
+            <div class="auth-container">
+                <h1>Career Guidance Platform</h1>
+                <p class="subtitle">Discover your ideal career path</p>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="showTab('login')">Login</button>
+                    <button class="tab-btn" onclick="showTab('signup')">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div id="login-error" class="error-message"></div>
+                </form>
+
+                <!-- Signup Form -->
+                <form id="signup-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <div id="signup-error" class="error-message"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view">
+            <header>
+                <h2>Career Guidance Dashboard</h2>
+                <div class="header-actions">
+                    <span id="user-name"></span>
+                    <button onclick="logout()" class="btn btn-secondary">Logout</button>
+                </div>
+            </header>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('profile')">Profile</button>
+                <button class="nav-tab" onclick="showSection('suggestions')">Career Suggestions</button>
+                <button class="nav-tab" onclick="showSection('roadmaps')">Roadmaps</button>
+                <button class="nav-tab" onclick="showSection('quizzes')">Quizzes</button>
+                <button class="nav-tab" onclick="showSection('courses')">Courses</button>
+                <button class="nav-tab" onclick="showSection('skills')">Skills</button>
+                <button class="nav-tab" onclick="showSection('mentors')">Mentors</button>
+            </nav>
+
+            <!-- Profile Section -->
+            <div id="profile-section" class="content-section active">
+                <div class="section">
+                    <h3>Your Profile</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="interests">Interests (comma-separated)</label>
+                            <input type="text" id="interests" placeholder="e.g., programming, design, healthcare">
+                        </div>
+                        <div class="form-group">
+                            <label for="skills">Skills (comma-separated)</label>
+                            <input type="text" id="skills" placeholder="e.g., python, communication, problem solving">
+                        </div>
+                        <div class="form-group">
+                            <label for="academic-background">Academic Background</label>
+                            <input type="text" id="academic-background" placeholder="e.g., Computer Science, Biology">
+                        </div>
+                        <div class="form-group">
+                            <label for="education-level">Education Level</label>
+                            <select id="education-level">
+                                <option value="">Select Education Level</option>
+                                <option value="high-school">High School</option>
+                                <option value="bachelor">Bachelor's Degree</option>
+                                <option value="master">Master's Degree</option>
+                                <option value="phd">PhD</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                        <button type="button" onclick="getSuggestions()" class="btn btn-success">Get Career Suggestions</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Career Suggestions Section -->
+            <div id="suggestions-section" class="content-section">
+                <div class="section">
+                    <h3>Career Suggestions for You</h3>
+                    <button onclick="getSuggestions()" class="btn btn-primary">Refresh Suggestions</button>
+                    <div id="suggestions-container"></div>
+                </div>
+            </div>
+
+            <!-- Career Roadmaps Section -->
+            <div id="roadmaps-section" class="content-section">
+                <div class="section">
+                    <h3>Career Roadmaps</h3>
+                    <div class="section-actions">
+                        <button onclick="loadRoadmaps()" class="btn btn-primary">Browse Roadmaps</button>
+                        <button onclick="loadMyRoadmaps()" class="btn btn-secondary">My Roadmaps</button>
+                    </div>
+                    <div id="roadmaps-container"></div>
+                </div>
+            </div>
+
+            <!-- Assessment Quizzes Section -->
+            <div id="quizzes-section" class="content-section">
+                <div class="section">
+                    <h3>Assessment Quizzes</h3>
+                    <div class="section-actions">
+                        <button onclick="loadQuizzes()" class="btn btn-primary">Available Quizzes</button>
+                        <button onclick="loadQuizHistory()" class="btn btn-secondary">My Quiz History</button>
+                    </div>
+                    <div id="quizzes-container"></div>
+                    <div id="quiz-container" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Courses & Certifications Section -->
+            <div id="courses-section" class="content-section">
+                <div class="section">
+                    <h3>Courses & Certifications</h3>
+                    <div class="section-actions">
+                        <button onclick="loadCourseRecommendations()" class="btn btn-primary">Recommended for Me</button>
+                        <button onclick="loadAllCourses()" class="btn btn-secondary">Browse All Courses</button>
+                        <button onclick="loadMyCourses()" class="btn btn-secondary">My Enrollments</button>
+                    </div>
+                    <div id="courses-container"></div>
+                </div>
+            </div>
+
+            <!-- Skill Recommendations Section -->
+            <div id="skills-section" class="content-section">
+                <div class="section">
+                    <h3>Skill Improvement Recommendations</h3>
+                    <button onclick="loadSkillRecommendations()" class="btn btn-primary">Get Recommendations</button>
+                    <div id="skills-container"></div>
+                </div>
+            </div>
+
+            <!-- Mentor Support Section -->
+            <div id="mentors-section" class="content-section">
+                <div class="section">
+                    <h3>Mentor Support System</h3>
+                    <div class="section-actions">
+                        <button onclick="loadMentorRecommendations()" class="btn btn-primary">Recommended Mentors</button>
+                        <button onclick="loadAllMentors()" class="btn btn-secondary">Browse All Mentors</button>
+                        <button onclick="loadMyConnections()" class="btn btn-secondary">My Connections</button>
+                    </div>
+                    <div id="mentors-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
